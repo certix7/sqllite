@@ -1,0 +1,55 @@
+#user/bin/python3
+import sqlite3
+
+def main():
+    print('we creat our database')
+    # creating database
+    db = sqlite3.connect('test.db')
+    db.row_factory = sqlite3.Row
+
+     # drop table
+
+    db.execute('drop table if exists sites')
+    comm=''' CREATE TABLE sites (
+    link TEXT NOT NULL)'''
+    #run the sql comand
+    db.execute(comm)
+    print("***************************")
+    files='data.txt'
+    count=1
+    with open(files,"r") as wordlist_file:
+            for line in wordlist_file:
+                test_url = line.strip()
+                count+=1
+                print(count)
+                #add(test_url)
+                db.execute(f'INSERT INTO sites (link)VALUES("{line}")')
+    db.commit()
+    print("******************************************")
+    print ("wel done you scrape the planet sites now hero")
+    print("****************************************************")
+
+
+  #  connection.close()
+
+
+
+if __name__ == "__main__": main()
+
+
+
+
+
+
+
+
+
+
+
+'''
+    curser=db.execute('select * from sites')
+    for row in curser:
+        row=dict(row)
+        print(row)
+
+'''
