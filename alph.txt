@@ -1,0 +1,742 @@
+ if true:
+  print "hello"
+
+
+
+
+BLOCK:ConstantList
+  value = ["one", "two", "three"]
+  => VAR @list
+ENDBLOCK
+
+for (int i = 0; i < list.Count; i++)
+{
+  BLOCK:ToUppercase
+    input = @list[i]
+    => VAR @upper
+  ENDBLOCK
+
+  list[i] = upper;
+}
+
+------------------------
+
+BLOCK:ConstantList
+LABEL:unique
+  value = []
+  => VAR @unique
+ENDBLOCK
+
+BLOCK:ConstantList
+LABEL:new
+  value = ["3", "5", "6"]
+  => VAR @new_links
+ENDBLOCK
+
+BLOCK:ConstantList
+LABEL:old
+  value = ["1", "2", "3"]
+  => VAR @old_links
+ENDBLOCK
+
+FOREACH link IN new_links
+IF LISTKEY @old_links DoesNotContain @link
+BLOCK:AddToList
+  list = @unique
+  item = @link
+ENDBLOCK
+END
+END
+
+
+-----------------------
+
+
+// We save the old proxy so we can set it back later
+var oldProxy = data.Proxy;
+
+// We assign a brand new proxy and make sure proxies are ON
+data.Proxy = new Proxy("127.0.0.1", 8080, ProxyType.Socks5);
+data.UseProxy = true;
+
+// Now everything you put will be through that proxy
+// REQUEST...
+
+// Finally put back the original proxy
+data.Proxy = oldProxy;
+
+-------------------------
+
+
+
+BLOCK:HttpRequest
+  TYPE:STANDARD
+  $""
+  "application/x-www-form-urlencoded"
+ENDBLOCK
+
+BLOCK:ConstantString
+  value = @data.RESPONSECODE
+  => VAR @constantStringOutput
+ENDBLOCK
+
+
+--------------
+
+var a = "";
+REPEAT 100
+a += "mystring";
+END
+------------------------
+
+
+
+COUNT PAGES 
+------------------------------------
+
+BLOCK:ConstantInteger
+LABEL:Integer
+  value = 1
+  => VAR @startpage
+ENDBLOCK
+
+BLOCK:Compute
+LABEL:float
+  input = $"<startpage>+1"
+  => VAR @nextpage
+ENDBLOCK
+
+#back
+BLOCK:Compute
+LABEL:count
+  input = $"<nextpage>+1"
+  => VAR @nextpage
+ENDBLOCK
+
+
+LOG $"page={nextpage}&order=asc&sort=user="
+
+IF STRINGKEY @nextpage NotEqualTo "100"
+JUMP #back
+END
+
+
+
+How to use custom inputs 
+--------------------------------
+
+set up global variables
+
+BLOCK:ConstantString
+  value = $"this <input.URL>"
+  => VAR @test
+ENDBLOCK
+
+BLOCK:ConstantString
+  value = $"this <input.cetrix>"
+  => VAR @testq
+ENDBLOCK
+
+
+-------------------------------------
+
+
+int time = (int)RuriLib.Functions.Time.TimeConverter.ToUnixTime(DateTime.UtcNow);
+
+ Added useUtc parameter to CurrentUnixTime block
+
+------------------------------------------------
+creat randonm values
+
+
+BLOCK:RandomString
+  input = "?h?h?h?h?h?h?h?h-?h?h?h?h-4?h?h?h-8?h?h?h-?h?h?h?h?h?h?h?h?h?h?h?h"
+  => VAR @UUID
+ENDBLOCK
+------------------------------------------
+
+Is it guaranteed that the IP you’re trying is working or could it be not working? For example you’re scanning an ip range and you want to see which ones work?
+If that’s the case, look into the TRY/CATCH statement like
+
+
+TRY
+// Http request block here
+IF   
+CATCH
+// the block above failed, do something else
+END
+
+----------------------------------------
+
+to click on button to authorize
+
+
+for JS you can do
+
+var x = document.getElementsByClassName("class name here")[0];
+
+x.click()
+
+or an action
+
+BLOCK:PuppeteerClick
+  findBy = Class
+  identifier = "class name here"
+ENDBLOCK
+
+--------------------------------------------
+dwnload photos
+---------------
+
+data.Logger.Enabled = false;
+
+BLOCK:HttpRequest
+LABEL:DOWNLOAD VIDEO
+  url = $"https://mk0paperlessmovn94k7.kinstacdn.com/wp-content/uploads/2019/09/o2dvsv2pnhe.jpg"
+  absoluteUriInFirstLine = True
+  timeoutMilliseconds = 500000
+  TYPE:STANDARD
+  ""
+  "application/x-www-form-urlencoded"
+ENDBLOCK
+
+BLOCK:FileWriteBytes
+LABEL:SAVE VIDEO
+  path = $"video/a.jpg"
+  content = @data.RAWSOURCE
+ENDBLOCK
+
+// your block
+data.Logger.Enabled = true;
+
+
+****
+extra
+*****
+Is the file it too big it will take time, avoid doing it in debugger because it will make openbullet lagging, also you can change the Request Timeout, so it have the time to download it.
+
+Here a piece a config i made to download a video (I’ve set timeout 500000 millisecond):
+
+BLOCK:HttpRequest
+LABEL:DOWNLOAD VIDEO
+  url = $"<DOWNLOAD_URL>"
+  absoluteUriInFirstLine = True
+  timeoutMilliseconds = 500000
+  TYPE:STANDARD
+  ""
+  "application/x-www-form-urlencoded"
+ENDBLOCK
+
+BLOCK:FileWriteBytes
+LABEL:SAVE VIDEO
+  path = $"video/<NAME>.mp4"
+  content = @data.RAWSOURCE
+ENDBLOCK
+
+
+
+
+
+
+
+------------------------------------------
+
+
+IF STRINGKEY @data.SOURCE Contains "/live"
+JUMP #HERE
+END
+
+// Other blocks
+
+#HERE
+
+// Other blocks
+
+
+
+-------------------------------------------------------------------------
+
+IF STRINGKEY @data.SOURCE Contains "postal_code"
+data.STATUS = "SUCCESS";
+ELSE
+data.STATUS = "FAIL";
+return;
+END
+--------------------------------------------------
+save images
+--------------------------
+
+BLOCK:CreatePath
+  path = "Images"
+ENDBLOCK
+data.Logger.Enabled = false;
+
+BLOCK:HttpRequest
+  url = "https://www.hdwallpapers.in/"
+  TYPE:STANDARD
+  $""
+  "application/x-www-form-urlencoded"
+ENDBLOCK
+
+BLOCK:Parse
+  input = @data.SOURCE
+  prefix = "https://www.hdwallpapers.in/thumbs/"
+  suffix = "jpg"
+  leftDelim = "<img src=\"/thumbs/"
+  rightDelim = "jpg"
+  caseSensitive = False
+  RECURSIVE
+  MODE:LR
+  => VAR @parseOutput
+ENDBLOCK
+
+FOREACH url IN parseOutput
+BLOCK:HttpRequest
+  url = @url
+  TYPE:STANDARD
+  $""
+  "application/x-www-form-urlencoded"
+ENDBLOCK
+
+if (data.RESPONSECODE != 404)
+{
+BLOCK:RandomString
+  input = "?d?d?d?d-?d?d?d?d-?d?d?d?d.jpg"
+  => VAR @NAME
+ENDBLOCK
+
+BLOCK:FileWriteBytes
+LABEL:Save Image
+  path = $"Images/<NAME>"
+  content = @data.RAWSOURCE
+ENDBLOCK
+} 
+END
+
+data.STATUS = "SUCCESS";
+return;
+
+
+-------------------------------------------------
+BLOCK:ConstantString
+  value = "{\"book\":[{\"id\":\"444\",\"language\":\"C\",\"edition\":\"First\",\"author\":\"Dennis Ritchie \"},{\"id\":\"555\",\"language\":\"C++\",\"author\":\" Bjarne Stroustrup \"}]}"
+  => VAR @json
+ENDBLOCK
+
+BLOCK:Parse
+  input = @json
+  jToken = "book[*]"
+  RECURSIVE
+  MODE:Json
+  => VAR @books
+ENDBLOCK
+
+BLOCK:ConstantList
+  value = []
+  => CAP @output
+ENDBLOCK
+
+FOREACH book IN books
+BLOCK:Parse
+  input = @book
+  jToken = "id"
+  MODE:Json
+  => VAR @id
+ENDBLOCK
+
+BLOCK:Parse
+  input = @book
+  jToken = "language"
+  MODE:Json
+  => VAR @language
+ENDBLOCK
+
+BLOCK:Parse
+  input = @book
+  jToken = "edition"
+  MODE:Json
+  => VAR @edition
+ENDBLOCK
+
+BLOCK:AddToList
+  list = @output
+  item = $"id: <id>, language: <language>, edition: <edition>"
+ENDBLOCK
+END
+
+
+LOG $"{output}"
+
+------------------------------------------
+string MakeUppercase(string str)
+{
+  return str.ToUpper();
+}
+
+var a = "hello";
+var b = "buongiorno";
+var c = MakeUppercase(a);
+var d = MakeUppercase(b);
+
+You can also create and use new classes, for example
+
+class MyClass
+{
+  public string MyProperty {get; set;}
+}
+
+var myObject = new MyClass();
+myObject.MyProperty = "hello";
+LOG myObject.MyProperty
+
+------------------------
+
+import sys
+sys.path.append(r"<PATH TO LIBS>")
+
+
+
+
+
+
+
+---------------------------------------------
+replace email
+
+
+
+
+BLOCK:RegexReplace
+  original = "text123email@email.com"
+  pattern = ".+?(?=email@)"
+  => VAR @regexReplaceOutput
+ENDBLOCK
+
+
+
+
+
+
+-------------------------------
+
+https://example.com/<numbers[0]>/xxx
+
+
+
+
+
+
+
+
+ https://naawy.com/api/public/proxylist/getRandom/?proxyType=<typeproxy>&anonymity=null&format=json 
+
+ https://naawy.com/api/public/proxylist/getRandom/?proxyType=<typeproxy>&anonymity=null&format=json
+ api/public/proxy
+
+
+-----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+IF STRINGKEY @yourvariable Contains "Love"
+IF STRINGKEY @yourvariable Contains "Like"
+IF STRINGKEY @yourvariable Contains "OK"
+JUMP #LOVE
+END
+END
+END
+
+
+
+
+Using C#
+
+if (yourvariable.Contains("Love") && yourvariable.Contains("Like") && yourvariable.Contains("OK")
+{
+JUMP #LOVE
+}
+
+If you want OR instead of AND just replace && with ||.
+
+
+
+
+
+
+
+
+
+IF STRINGKEY @Age Contains "25"
+data.STATUS = "FAIL";
+return;
+END
+
+
+// Put a constant string block here and initialize your variable (empty)
+IF STRINGKEY @Age Contains "25"
+// Put another constant string block here and assign the value to the variable above
+END
+
+
+string VALID_AGE = "";
+data.MarkForCapture(nameof(VALID_AGE));
+IF STRINGKEY @data.SOURCE Contains "xx"
+VALID_AGE = "YES";
+ENDIF
+
+
+if (@yourvariable.Contains("a"))
+{
+  LOG "20 is greater than 18"
+}
+
+
+
+string yourvariable = "alpha25";
+
+
+
+IF STRINGKEY @yourvariable Contains "25"
+data.STATUS = "FAIL";
+return;
+END
+
+
+
+
+
+IF STRINGKEY @yourvariable Contains "25"
+data.STATUS = "FAIL";
+return;
+END
+
+if (yourvariable.Contains("Love") && yourvariable.Contains("Like") && yourvariable.Contains("OK"))
+{
+LOG "DDDDDDDDDDDD" 
+}
+
+------------------------------------------------
+
+
+
+Help About Jump 
+-----------------------------------------
+
+
+
+
+
+BLOCK:ConstantString
+LABEL:alpha
+  value = "montu sec "
+  => CAP @alpha
+ENDBLOCK
+
+
+IF STRINGKEY @alpha Contains "sec"
+JUMP #HCAPTCHA
+
+ELSE
+JUMP #LOGIN
+END
+
+#HCAPTCHA
+// other blocks
+LOG "THIS IS CAPTCHA "
+//data.STATUS = "FAIL";
+return;
+
+
+#LOGIN
+// your other blocks
+LOG "THIS IS LOGIN"
+
+BLOCK:HttpRequest
+  TYPE:STANDARD
+  $""
+  "application/x-www-form-urlencoded"
+ENDBLOCK
+
+
+
+
+
+
+
+
+
+
+
+*************************
+
+IF STRINGKEY @data.SOURCE Contains "blahblah"
+JUMP #HCAPTCHA
+ELSE
+JUMP #LOGIN
+END
+
+#HCAPTCHA
+// other blocks
+
+#LOGIN
+// your other blocks
+
+-------------------------------
+
+/*
+this is a comment
+on multiple lines
+*/
+
+
+
+
+
+
+
+
+
+
+
+string content = $"<em>hello</em><em>{myVariable}</em>";`
+
+
+
+
+
+
+
+
+
+string Dam = "";
+data.MarkForCapture(nameof(Dam));
+
+IF INTKEY @rs GreaterThan 20
+IF INTKEY @jk GreaterThan 12
+IF INTKEY @dg GreaterThan 30
+Dam = "Yes";
+ELSE
+Dam = "No";
+END
+
+SET VAR Dam ""
+
+IF INTKEY @rs GreaterThan 20
+IF INTKEY @jk GreaterThan 12
+IF INTKEY @dg GreaterThan 30
+SET CAP Dam "Yes"
+ELSE
+SET CAP Dam "No"
+END
+
+
+
+
+
+
+
+1d
+
+Imagine you have a highly nested element with no easy attribute or parent handle you can reference, like this one:
+
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <a href="products.php?productID=67432">Product Name</a>
+
+In this case you would struggle both with a normal CSS Selector and with LR since the number 67423 usually changes.
+You would have to do it with regex but if it’s on multiple lines, the pattern is going to be very unpleasant to build.
+
+There is actually a very simple and clean trick to this. You can use the *= operator which, unlike =, doesn’t try to find if something matches, but tries to find if something CONTAINS something else.
+
+So we can use the regular syntax for the CSS Selector search via attribute value and replace the = with *= thus obtaining, in this case:
+
+Selector: [href*=productID]
+Output Attribute: innerHTML
+
+Which literally means "search for elements where the href attribute CONTAINS the word productID".
+
+You can read more about the CSS Selector and its operators here CSS Selectors Reference 4
+
+Ruri
+
+---------------------------
+
+fucking captacha
+
+
+data.SOURCE = "<td align=right><div style='width:80px;height:26px;font:bold 13px Arial;background:#ccc;text-align:left;direction:ltr;'><span style='position:absolute;padding-left:60px;padding-top:5px;'>&#55;</span><span style='position:absolute;padding-left:26px;padding-top:7px;'>&#51;</span><span style='position:absolute;padding-left:42px;padding-top:5px;'>&#52;</span><span style='position:absolute;padding-left:10px;padding-top:5px;'>&#54;</span></div></td>";
+
+BLOCK:Parse
+  input = @data.SOURCE
+  pattern = "padding-left:([0-9]+)px[^>]*>(&#[0-9]+;)"
+  outputFormat = "[1]"
+  RECURSIVE
+  MODE:Regex
+  => VAR @NUMBERS
+ENDBLOCK
+
+BLOCK:SortList
+  list = @NUMBERS
+  numeric = True
+ENDBLOCK
+
+BLOCK:Parse
+  input = @data.SOURCE
+  leftDelim = "padding-left:<NUMBERS[0]>px[^>]*>(&#[0-9]+;)"
+  pattern = $"padding-left:<NUMBERS[0]>px[^>]*>(&#[0-9]+;)"
+  outputFormat = "[1]"
+  MODE:Regex
+  => VAR @NUM1
+ENDBLOCK
+
+BLOCK:Parse
+  input = @data.SOURCE
+  leftDelim = "padding-left:<NUMBERS[0]>px[^>]*>(&#[0-9]+;)"
+  pattern = $"padding-left:<NUMBERS[1]>px[^>]*>(&#[0-9]+;)"
+  outputFormat = "[1]"
+  MODE:Regex
+  => VAR @NUM2
+ENDBLOCK
+
+BLOCK:Parse
+  input = @data.SOURCE
+  leftDelim = "padding-left:<NUMBERS[0]>px[^>]*>(&#[0-9]+;)"
+  pattern = $"padding-left:<NUMBERS[2]>px[^>]*>(&#[0-9]+;)"
+  outputFormat = "[1]"
+  MODE:Regex
+  => VAR @NUM3
+ENDBLOCK
+
+BLOCK:Parse
+  input = @data.SOURCE
+  leftDelim = "padding-left:<NUMBERS[0]>px[^>]*>(&#[0-9]+;)"
+  pattern = $"padding-left:<NUMBERS[3]>px[^>]*>(&#[0-9]+;)"
+  outputFormat = "[1]"
+  MODE:Regex
+  => VAR @NUM4
+ENDBLOCK
+
+BLOCK:DecodeHTMLEntities
+  input = $"<NUM1><NUM2><NUM3><NUM4>"
+  => VAR @SOLUTION
+ENDBLOCK
+
+
+
+
+BAN = ban the proxy and retry the data
+RETRY = don’t ban the proxy and retry the data with the same proxy
+ERROR = same as BAN but it reports that an exception was thrown in the code instead of being a result of a keycheck.
+
+
+IF DICTKEY @data.HEADERS HasKey "Token"
+data.STATUS = "BAN";
+END
+
